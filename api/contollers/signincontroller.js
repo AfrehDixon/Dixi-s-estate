@@ -1,15 +1,18 @@
 import User from "../Model/user.model.js";
-import bcryptjs from "bcryptjs";
-export const signup = async (req, res) => {
-	const { username, email, password } = req.body;
-	const hashedPassword = bcryptjs.hashSync(password, 10);
+import bcrypt from "bcryptjs";
+import { errorHandler } from "../utils/error.js";
+
+export const signup = async (req, res, next) => {
+    var salt = bcrypt.genSaltSync(10);
+    const { username, email, password } = req.body;
+	const hashedPassword =  bcrypt.hashSync(password, 10);
+	const newUser = new User({ username, email, password: hashedPassword });
+	console.log(newUser);
 
 	try {
-		const newUser = new User({ username, email, password: hashedPassword });
 		await newUser.save();
-	} catch (e) {
-		res.status(500).json(e.message);
+		res.status(201).json( "User created succesfully" );
+	} catch (err) {
+		next(err);
 	}
-
-	res.status(201).json({ message: "User created succesfully" });
 };
