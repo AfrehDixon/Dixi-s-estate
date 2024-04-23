@@ -20,15 +20,15 @@ mongoose
 app.use("/api/user", Userroute);
 app.use("/api/auth", authroute);
 
-// app.use((err, req, res, next) => {
-// 	const statuscode = err.statuscode || 500;
-// 	const message = err.message || "Internal Server Error";
-// 	return res.status(statuscode).json({
-// 		statuscode,
-// 		message,
-// 		success: false,
-// 	});
-// });
+app.use((err, req, res, next) => {
+	const statuscode = err.statuscode || 500;
+	const message = err.message || "Internal Server Error";
+	return res.status(statuscode).json({
+		statuscode,
+		message,
+		success: false,
+	});
+});
 
 app.listen(3000, () => {
 	console.log("Server is running on port 3000.........");
